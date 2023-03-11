@@ -3,7 +3,10 @@ const BodyParser = require("body-parser");
 const Cors = require("cors");
 const express = require("express");
 const Mongoose = require("mongoose");
+require("dotenv").config();
 const {employeeModel} = require('./model/Employee');
+
+const mongoUri = process.env.DB_PATH
 
 let app = express();
 app.use(BodyParser.json());
@@ -14,7 +17,7 @@ const path=require('path');
 app.use(express.static(path.join(__dirname+'/dist/FrontEnd')));
 // Task2: create mongoDB connection 
 
-Mongoose.connect("mongodb+srv://vaisakh:147852@employee.3vtz3vr.mongodb.net/Company?retryWrites=true&w=majority", {useNewUrlParser:true});
+Mongoose.connect(mongoUri, {useNewUrlParser:true});
 //Task 2 : write api with error handling and appropriate api mentioned in the TODO below
 
 
@@ -67,8 +70,8 @@ app.delete('/api/employeelist/:id', async (req,res)=>{
 
 //TODO: Update  a employee data from db by using api '/api/employeelist'
 //Request body format:{name:'',location:'',position:'',salary:''}
-app.put('/api/employeelist', async (req, res)=>{
-    let data = await employeeModel.findOneAndUpdate({"id":req.body._id}, req.body);
+app.put('/api/employeelist/:id', async (req, res)=>{
+    let data = await employeeModel.findOneAndUpdate({"_id":req.body._id}, req.body);
     res.json(data);
 });
 
